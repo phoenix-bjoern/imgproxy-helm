@@ -2,11 +2,7 @@ apiVersion: {{ .Values.apiVersion }}
 kind: Deployment
 metadata:
   name: {{ template "imgproxy.fullname" . }}
-  labels:
-    heritage: {{ .Release.Service | quote }}
-    release: {{ .Release.Name | quote }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
-    app: {{ template "imgproxy.fullname" . }}
+  labels: {{ include "imgproxy.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:

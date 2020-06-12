@@ -50,37 +50,34 @@ livenessProbe:
   successThreshold: 1
   failureThreshold: 5
 
-tls:
-  enabled: false
-
 # Configuration parameters for Ingress resource
 ingress:
-  acme: false
+  # Common annotations for all ingress resources
   annotations: {}
   enabled: false
-  hosts:
-    - host: "example.com"
-      paths:
-        - /
+  hosts: []
+    # - name: example.com
+    # - name: example2.com
+    #   tlsSecret: exampleA-tls
+    # - name: example3.com
+    #   acme: true
+    # - name: example4.com
+    #   acme: true
+    #   annotations:
+    #     neko: nya
+    # - name: example5.com
+    #   tlsSecret: exampleB-tls
+    # - name: example6.com
+    #   tlsSecret: exampleB-tls
+    #   annotations:
+    #     inu: wan-wan
+  pathSuffix: ""
+
   tls: []
-  #  - secretName: example-tls
-  #    crt: ""
-  #    key: ""
-  #    hosts:
-  #      - example.com
-  health:
-    hosts:
-      - example.com
-    # Comma separated string of CIDR addresses that are allowed
-    # to access `/health` url of imgproxy.
-    whitelist: ""
-    annotations: {}
-    tls: []
-      #  - secretName: example-tls
-      #    crt: ""
-      #    key: ""
-      #    hosts:
-      #      - example.com
+    # - secretName: example-tls
+    #   crt: "CRT EXAMPLE"
+    #   key: "KEY EXAMPLE"
+
 enablePrometheus: false
 serviceMonitor:
   enabled: false
@@ -94,9 +91,9 @@ serviceMonitor:
     - release
 
 podDisruptionBudget:
-  enabled: true
+  enabled: false
   minAvailable: 0
-  maxUnavailable: 0
+  maxUnavailable: 1
 
 # Pod annotations
 annotations: {}

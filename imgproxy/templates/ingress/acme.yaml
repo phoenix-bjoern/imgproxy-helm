@@ -1,0 +1,46 @@
+{{- if .Values.ingress.enabled }}
+
+{{- $dot := . }}
+{{- $commonAnnotations := .Values.ingress.annotations }}
+{{- $serviceName := include "imgproxy.fullname" . }}
+
+{{- $path := "/" }}
+{{- if .Values.pathPrefix }}
+  {{- $path = .Values.pathPrefix }}
+{{- end }}
+{{- if .Values.ingress.pathSuffix }}
+  {{- $path = printf "%s%s" $path .Values.ingress.pathSuffix }}
+{{- end }}
+
+{{- range .Values.ingress.hosts }}
+{{- if .acme }}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .name }}
+  labels: {{ include "imgproxy.labels" $dot | nindent 4 }}
+  annotations:
+    kubernetes.io/tls-acme: "true"
+{{- if $commonAnnotations }}
+{{ toYaml $commonAnnotations | indent 4 }}
+{{- end }}
+{{- if .annotations }}
+{{ toYaml .annotations | indent 4 }}
+{{- end }}
+spec:
+  tls:
+    - hosts:
+        - name: {{ .name }}
+      secretName: {{ .name }}-tls
+  rules:
+    - host: {{ .name }}
+      http:
+        paths:
+          - path: {{ $path }}
+            backend:
+              serviceName: {{ $serviceName }}
+              servicePort: 80
+{{- end }}
+{{- end }}
+{{- end }}

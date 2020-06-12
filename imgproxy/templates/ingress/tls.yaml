@@ -1,0 +1,13 @@
+{{- $dot := . }}
+{{- range .Values.ingress.tls }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .secretName }}
+  labels: {{ include "imgproxy.labels" $dot | nindent 4 }}
+type: kubernetes.io/tls
+data:
+  tls.crt: {{ .crt }}
+  tls.key: {{ .key }}
+{{- end }}

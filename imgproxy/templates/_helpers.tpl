@@ -21,3 +21,13 @@ Template to generate secrets for a private Docker repository for K8s to use
 {{- define "imgproxy.imagePullSecrets" }}
 {{- printf "{\"auths\": {\"%s\": {\"auth\": \"%s\"}}}" .Values.imagePullSecrets.registry (printf "%s:%s" .Values.imagePullSecrets.username .Values.imagePullSecrets.password | b64enc) | b64enc }}
 {{- end }}
+
+{{/*
+Template for the common labels
+*/}}
+{{- define "imgproxy.labels" -}}
+app: {{ template "imgproxy.fullname" . }}
+chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+release: "{{ .Release.Name }}"
+heritage: "{{ .Release.Service }}"
+{{- end -}}
